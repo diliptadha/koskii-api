@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/createProduct.dto';
@@ -20,9 +21,22 @@ export class ProductsController {
     return this.productsService.create(createProductDto);
   }
 
-  @Get()
-  findAll() {
-    return this.productsService.findAll();
+  @Post('get')
+  findAll(@Query() paginationQuery, @Body() body) {
+    let { skip, take } = paginationQuery;
+    if (!skip) {
+      skip = 0;
+    }
+    if (!take) {
+      take = 1000;
+    }
+    return this.productsService.findAll(+skip, +take, body);
+  }
+
+  @Get('search')
+  findBySearch(@Query('name') name: string) {
+    name = name.charAt(0).toUpperCase() + name.slice(1);
+    return this.productsService.findBySearch(name);
   }
 
   @Get(':id')

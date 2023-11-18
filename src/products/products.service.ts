@@ -20,8 +20,33 @@ export class ProductsService {
     return product;
   }
 
-  findAll() {
-    return this.prisma.product.findMany();
+  findAll(skip, take, catArray: Array<string>) {
+    console.log(catArray);
+    // console.log({ catArray }, 'this is catarr');
+    if (catArray.length == 0 || Object.keys(catArray).length === 0) {
+      return this.prisma.product.findMany({
+        skip,
+        take,
+      });
+    } else {
+      return this.prisma.product.findMany({
+        where: {
+          category: { in: catArray },
+        },
+        skip,
+        take,
+      });
+    }
+  }
+
+  findBySearch(word: string) {
+    return this.prisma.product.findMany({
+      where: {
+        title: {
+          contains: word,
+        },
+      },
+    });
   }
 
   async findOne(id: string) {
