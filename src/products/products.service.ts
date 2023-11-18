@@ -21,8 +21,7 @@ export class ProductsService {
   }
 
   findAll(skip, take, catArray: Array<string>) {
-    console.log(catArray);
-    // console.log({ catArray }, 'this is catarr');
+    // console.log(catArray);
     if (catArray.length == 0 || Object.keys(catArray).length === 0) {
       return this.prisma.product.findMany({
         skip,
