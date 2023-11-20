@@ -23,14 +23,21 @@ export class ProductsController {
 
   @Post('get')
   findAll(@Query() paginationQuery, @Body() body) {
-    let { skip, take } = paginationQuery;
+    let { skip, take, name } = paginationQuery;
+    const { sort, order } = paginationQuery;
+    if (name) {
+      name = name.charAt(0).toUpperCase() + name.slice(1);
+    } else {
+      name = '';
+    }
+    // console.log(sort, order);
     if (!skip) {
       skip = 0;
     }
     if (!take) {
       take = 1000;
     }
-    return this.productsService.findAll(+skip, +take, body);
+    return this.productsService.findAll(+skip, +take, sort, order, name, body);
   }
 
   @Get('search')

@@ -20,20 +20,35 @@ export class ProductsService {
     return product;
   }
 
-  findAll(skip, take, catArray: Array<string>) {
+  findAll(skip, take, sort, order, word, catArray: Array<string>) {
     // console.log(catArray);
+    // console.log(orderBy);
     if (catArray.length == 0 || Object.keys(catArray).length === 0) {
       return this.prisma.product.findMany({
+        where: {
+          title: {
+            contains: word,
+          },
+        },
         skip,
         take,
+        orderBy: {
+          [sort]: order,
+        },
       });
     } else {
       return this.prisma.product.findMany({
         where: {
           category: { in: catArray },
+          title: {
+            contains: word,
+          },
         },
         skip,
         take,
+        orderBy: {
+          [sort]: order,
+        },
       });
     }
   }
